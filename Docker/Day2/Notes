@@ -1,0 +1,10 @@
+                            |||||      Day2     ||||||
+-----------------------------------------------------------------------------------------------------
+
+docker pull <image name>
+docker pull httpd
+docker images--> list images 
+docker ps --> list containers
+docker rmi -f --> force delete image & container
+
+
