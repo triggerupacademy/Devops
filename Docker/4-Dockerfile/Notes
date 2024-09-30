@@ -1,0 +1,49 @@
+|||| Dockerfile Explanation ||||
+
+
+Build the Dockerfile:
+
+   docker build -t myimage:v1 .
+   docker build -t myimage:v1 <path of the dockerfile>
+   
+Run the Container:
+   docker run -d -p 8080:80 myimage:v1
+   
+Verify: 
+   <ip-address>:8080
+   
+   
+
+
+Base image of our own build image:
+
+   Dockerfile:
+	     
+	# Use the existing image 'triggerupacademy/myimage' as the base
+	FROM myimage:v1
+
+	# Update the package list and install Git and Vim
+	RUN apt-get update && \
+	    apt-get install -y git vim && \
+	    apt-get clean && \
+	    rm -rf /var/lib/apt/lists/*
+
+	# Expose port 80 for the Apache server
+	EXPOSE 80
+
+	# Start the Apache service
+	CMD ["apachectl", "-D", "FOREGROUND"]
+
+	
+   Run the Container:	
+	docker build -t myimage:v2 .
+         docker run -d -p 8080:80 myimage:v2 
+         
+         
+         
+         
+         
+         
+
+
+

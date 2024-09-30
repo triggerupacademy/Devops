@@ -1,0 +1,33 @@
+|||||||||||     05   ||||||||||
+
+
+-itd explanation:
+      
+      -i --> input/interactive
+      -t --> terminal
+      -d --> detached mode
+      
+
+
+
+
+  -i --> input/interactive
+      
+     When you run a Python file that expects input from the user inside a Docker container, you need to use the -i flag for interactive mode. This flag allows the container to keep the input/output streams open so you can interact with the container, particularly when the container requires user input.
+
+
+      ex: Dockerfile-python_program
+
+      docker build -t my-python-input .
+      docker run -it my-python-input
+
+
+  -t --> terminal
+      ex: python terminal,noramal terminal connect
+
+  
+   
+  -d--> detached mode
+   
+         ex: docker run -d -p "9092:80" httpd
+            docker run -p "9090:80" httpd

@@ -1,0 +1,19 @@
+||||||||   Day 3  |||||||||
+
+docker volume:
+
+   /usr/local/apache2/htdocs
+   /root/html/
+
+  folder syn:
+     docker run -itd -p "7070:80" -v "/root/html:/usr/local/apache2/htdocs" httpd
+
+
+   volume create:
+
+	docker volume ls
+	docker volume create my-vol
+	docker inspect  my-vol
+	docker run -itd --mount source=my-vol,destination=/usr/local/apache2/htdocs -p "9090:80" httpd
+
+

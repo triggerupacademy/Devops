@@ -1,0 +1,105 @@
+The Manual Way:
+
+     # Run MySQL container
+     docker run --name mysql-db -e MYSQL_ROOT_PASSWORD=rootpass -e MYSQL_DATABASE=wordpress -e MYSQL_USER=wpuser -e MYSQL_PASSWORD=wppass -d mysql:5.7
+
+     # Run WordPress container and link it to MySQL
+     docker run --name wp-container --link mysql-db:mysql -e WORDPRESS_DB_HOST=mysql:3306 -e WORDPRESS_DB_USER=wpuser -e WORDPRESS_DB_PASSWORD=wppass -e WORDPRESS_DB_NAME=wordpress -p 8080:80 -d wordpress
+
+
+Problems:
+     -Complex to manage and track multiple containers.
+     -Manually linking containers with --link or IP address dependency.
+     -No single configuration file to easily recreate or scale the app.
+
+
+Docker Compose to the Rescue:
+       With Docker Compose, you can define all your services (WordPress, MySQL, etc.) in one file, making management simpler and the setup portable.
+
+
+       installation:
+         sudo apt-get update
+         sudo apt-get install docker-compose-plugin
+
+
+Docker Compose File (docker-compose.yml):
+
+version: '3'
+
+services:
+  # MySQL Service
+  mysql:
+    image: mysql:5.7
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wpuser
+      MYSQL_PASSWORD: wppass
+
+  # WordPress Service
+  wordpress:
+    image: wordpress:latest
+    depends_on:
+      - mysql
+    ports:
+      - "8080:80"
+    environment:
+      WORDPRESS_DB_HOST: mysql:3306
+      WORDPRESS_DB_USER: wpuser
+      WORDPRESS_DB_PASSWORD: wppass
+      WORDPRESS_DB_NAME: wordpress
+
+# Define named volumes for persistent storage
+volumes:
+  db_data:
+
+
+
+Explanation of Key Components:
+  version: '3': Specifies the version of Docker Compose syntax being used. Version 3 is recommended for modern setups.
+
+  services: This section defines the containers that Compose will manage.
+
+    mysql:
+
+    image: mysql:5.7: Pulls the MySQL 5.7 image from Docker Hub.
+    volumes: db_data:/var/lib/mysql: Persists MySQL data on the host machine, ensuring that data isn’t lost if the container is stopped.
+    environment: Sets up MySQL environment variables, such as the root password, database name, and user credentials.
+    restart: always: Ensures the MySQL container restarts automatically if it crashes.
+    
+    wordpress:
+
+    image: wordpress:latest: Pulls the latest WordPress image.
+    depends_on: Ensures that the MySQL container starts before WordPress.
+    ports: 8080:80: Exposes WordPress on port 8080 of the host.
+    environment: Configures WordPress to connect to the MySQL database using environment variables.
+    volumes:
+
+    db_data: A named volume that stores MySQL data persistently, ensuring the data is not lost between container restarts.
+
+
+Why Docker Compose?
+
+    Simplifies Multi-Container Management: Compose handles starting, stopping, and managing multiple services (MySQL, WordPress) easily with a single command.
+
+    Portability: All configuration is stored in a single docker-compose.yml file, making it easy to share the setup or version-control it.
+
+    Auto-Dependency Handling: With depends_on, Compose ensures that dependent containers (like WordPress needing MySQL) start in the correct order.
+
+    Volume Management: Persistent storage for MySQL is handled through Docker Volumes, ensuring that data is stored independently of the container lifecycle.
+
+    One-Command Start: Instead of running multiple docker run commands, you can bring up your entire stack with a single command:
+
+         docker compose up
+   
+    Scaling: You can easily scale your services (e.g., multiple WordPress instances) with:
+
+         docker compose up --scale wordpress=3
+
+
+Conclusion:
+           Docker Compose makes managing multi-container applications
+easier, more scalable, and more maintainable. It replaces complex docker run commands and offers a clean, declarative way to define and manage your application stack

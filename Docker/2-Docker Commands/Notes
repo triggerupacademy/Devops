@@ -1,0 +1,24 @@
+                            |||||      Day2     ||||||
+-----------------------------------------------------------------------------------------------------
+
+docker pull <image name>
+docker pull httpd
+docker images--> list images 
+docker ps --> list containers
+docker rmi -f --> force delete image & container
+docker inspect <container_name> (or <container_id>)
+docker logs <container_name> (or <container_id>)
+docker logs -f  <container_name> (or <container_id>)
+docker stats <container_name> (or <container_id>)
+docker inspect <container_name> (or <container_id>)
+docker exec -it <container_name_or_id> /bin/bash
+
+docker commit <container_id> image-name:version
+docker save -o /home/ubuntu/mybackimage.tar myimage
+docker load -i mybackimage.tar
+
+
+docker login -u triggerupacademy
+docker tag myimage:v1 triggerupacademy/myimage:v1
+docker push triggerupacademy/myimage:v1
+
